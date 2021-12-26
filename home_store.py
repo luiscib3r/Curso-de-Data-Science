@@ -76,12 +76,19 @@ def income_statement(data: pd.DataFrame) -> pd.DataFrame:
     return income_statement
 
 
+def sales_by_city(data: pd.DataFrame) -> pd.DataFrame:
+    return data[['sales', 'city']].groupby('city').sum()
+
+def review_by_category(data: pd.DataFrame) -> pd.DataFrame:
+    return data[['review', 'category']].groupby('category').sum()
+
+
 def main():
-    st.write('# Home Store')
+    st.set_page_config(page_title='Home Store', layout = 'wide', initial_sidebar_state = 'auto')
+    st.title('Home Store')
 
     data = load_data()
 
-    
     sales = data['sales'].sum().round(2)
     cogs = data['cogs'].sum().round(2)
     gross_profit = (sales - cogs).round(2)
@@ -96,6 +103,13 @@ def main():
 
     st.write('### Income statement')
     st.table(income_statement(data))
+
+    st.subheader('Charts')
+
+    col1, col2 = st.columns(2)
+
+    col1.bar_chart(sales_by_city(data), height=450)
+    col2.bar_chart(review_by_category(data), height=500)
 
 
 if __name__ == '__main__':
